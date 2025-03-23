@@ -1,7 +1,7 @@
 [project]
-name = "mcp_weather"
+name = "taiwan_weather_mcp"
 version = "0.1.0"
-description = "MCP Taiwan Weather"
+description = "Taiwan Weather MCP"
 readme = "README.md"
 requires-python = ">=3.12.7"
 dependencies = [

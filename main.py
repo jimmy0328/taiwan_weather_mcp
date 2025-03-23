@@ -4,15 +4,12 @@ import httpx
 from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
 
-# 加載環境變數
 load_dotenv()
 
-# 設定 OpenWeatherMap API 金鑰
 API_KEY = os.getenv("OPENWEATHER_API_KEY")
 if not API_KEY:
     raise ValueError("請在 .env 檔案中設定 OPENWEATHER_API_KEY")
 
-# 台灣主要縣市對應的經緯度
 TAIWAN_CITIES = {
     "臺北市": {"lat": 25.0330, "lon": 121.5654},
     "新北市": {"lat": 25.0160, "lon": 121.4630},
@@ -36,18 +33,13 @@ TAIWAN_CITIES = {
     "澎湖縣": {"lat": 23.5711, "lon": 119.5793}
 }
 
-# 建立 FastMCP 服務器
 mcp = FastMCP("taiwan-weather")
-
-# 定義工具
-
 
 @mcp.tool()
 async def get_taiwan_weather(city: str) -> str:
     if city not in TAIWAN_CITIES:
         return "請提供有效的台灣縣市名稱"
 
-    # 獲取天氣資料
     async with httpx.AsyncClient() as client:
         params = {
             "lat": TAIWAN_CITIES[city]["lat"],
@@ -63,7 +55,6 @@ async def get_taiwan_weather(city: str) -> str:
         response.raise_for_status()
         data = response.json()
 
-        # 格式化天氣資訊
         weather_info = {
             "縣市": city,
             "溫度": f"{data['main']['temp']}°C",
@@ -74,6 +65,5 @@ async def get_taiwan_weather(city: str) -> str:
 
         return json.dumps(weather_info, ensure_ascii=False, indent=2)
 
-# 啟動服務器
 if __name__ == "__main__":
     mcp.run()
